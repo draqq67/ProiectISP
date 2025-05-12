@@ -6,9 +6,8 @@ import com.mongodb.client.MongoDatabase;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class MongoConfig {
-    private static final Dotenv dotenv = Dotenv.load();
-    private static final String CONNECTION_STRING = dotenv.get("MONGODB_URI");
-    private static final String DB_NAME = dotenv.get("MONGODB_DB");
+    private static final String CONNECTION_STRING = "mongodb+srv://admin:admin@platformabooking.hnrptph.mongodb.net/";
+    private static final String DB_NAME = "Booking";
 
     private static final MongoClient client = MongoClients.create(CONNECTION_STRING);
 
