@@ -1,3 +1,5 @@
+package com.booking.service;
+
 import com.booking.config.MongoConfig;
 import com.booking.models.IndisponibilitateCamera;
 import com.booking.repository.IndisponibilitateCameraRepository;
@@ -77,5 +79,24 @@ public class IndisponibilitateCameraTest {
 
         repository.deleteById(indisponibilitate1.getId());
         repository.deleteById(indisponibilitate2.getId());
+    }
+
+
+    @Test
+    public void testInsertMultipleForSameCamera() {
+        ObjectId cameraId = new ObjectId();
+
+        IndisponibilitateCamera i1 = new IndisponibilitateCamera(null, cameraId, LocalDate.of(2025, 9, 1), LocalDate.of(2025, 9, 3));
+        IndisponibilitateCamera i2 = new IndisponibilitateCamera(null, cameraId, LocalDate.of(2025, 9, 10), LocalDate.of(2025, 9, 12));
+
+        repository.save(i1);
+        repository.save(i2);
+
+        List<IndisponibilitateCamera> rezultate = repository.findByCameraId(cameraId);
+        assertEquals(2, rezultate.size());
+
+        for (IndisponibilitateCamera i : rezultate) {
+            repository.deleteById(i.getId());
+        }
     }
 }

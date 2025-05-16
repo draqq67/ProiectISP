@@ -66,4 +66,36 @@ public class IndisponibilitateCameraRepository {
     public void deleteById(ObjectId id) {
         collection.deleteOne(new Document("_id", id));
     }
+
+
+    /**
+     * Returnează lista cu ID-urile camerelor disponibile într-un anumit interval.
+     * @param startDate Data de început a intervalului (inclusiv)
+     * @param endDate Data de sfârșit a intervalului (inclusiv)
+     * @param allCameraIds Lista cu toate camerele din sistem
+     * @return Lista cu ObjectId-urile camerelor disponibile (fără suprapuneri)
+     */
+    public List<ObjectId> findAvailableCameraIds(LocalDate startDate, LocalDate endDate, List<ObjectId> allCameraIds) {
+        List<ObjectId> indisponibile = new ArrayList<>();
+
+        for (Document doc : collection.find()) {
+            LocalDate dataStart = LocalDate.parse(doc.getString("dataStart"));
+            LocalDate dataEnd = LocalDate.parse(doc.getString("dataEnd"));
+
+            boolean overlap = !dataEnd.isBefore(startDate) && !dataStart.isAfter(endDate);
+            if (overlap) {
+                indisponibile.add(doc.getObjectId("cameraId"));
+            }
+        }
+
+        List<ObjectId> disponibile = new ArrayList<>();
+        for (ObjectId cameraId : allCameraIds) {
+            if (!indisponibile.contains(cameraId)) {
+                disponibile.add(cameraId);
+            }
+        }
+
+        return disponibile;
+    }
 }
+
