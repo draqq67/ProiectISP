@@ -16,7 +16,9 @@ import static com.mongodb.client.model.Filters.eq;
 public class BookingRepository {
    private final MongoCollection<Document> collection;
 
-   public BookingRepository(MongoDatabase db) {this.collection = db.getCollection("booking");}
+   public BookingRepository(MongoDatabase db) {
+       this.collection = db.getCollection("booking");
+   }
 
     public void save(Booking booking) {
        Document doc = new Document("clientId", booking.getClientId())

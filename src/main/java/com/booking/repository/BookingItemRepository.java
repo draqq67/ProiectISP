@@ -11,7 +11,9 @@ import java.util.List;
 public class BookingItemRepository {
     private final MongoCollection<Document> collection;
 
-    public BookingItemRepository(MongoDatabase db) {this.collection = db.getCollection("bookingItem");}
+    public BookingItemRepository(MongoDatabase db) {
+        this.collection = db.getCollection("bookingItem");
+    }
 
     public List<Document> save(List<BookingItem> items) {
         List<Document> docs = new ArrayList<>();

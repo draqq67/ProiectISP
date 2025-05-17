@@ -9,7 +9,6 @@ import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 import static com.mongodb.client.model.Filters.eq;
 
 public class FacturaRepository {
