@@ -26,7 +26,7 @@ public class HotelRepository {
         List<Document> camereDocs = new ArrayList<>();
         for (InventarCamera inventar : hotel.getCamere()) {
             camereDocs.add(new Document("cameraId", inventar.getCameraId())
-                                  .append("numarCamere", inventar.getNumarCamere()));
+                    .append("numarCamere", inventar.getNumarCamere()));
         }
 
         Document doc = new Document("nume", hotel.getNume())
@@ -45,7 +45,7 @@ public class HotelRepository {
         List<Document> camereDocs = new ArrayList<>();
         for (InventarCamera inventar : hotel.getCamere()) {
             camereDocs.add(new Document("cameraId", inventar.getCameraId())
-                                  .append("numarCamere", inventar.getNumarCamere()));
+                    .append("numarCamere", inventar.getNumarCamere()));
         }
 
         Document updatedDoc = new Document("nume", hotel.getNume())
@@ -112,7 +112,7 @@ public class HotelRepository {
         return hoteluri;
     }
 
-    
+
 
     public void deleteById(ObjectId id) {
         collection.deleteOne(new Document("_id", id));
@@ -169,4 +169,3 @@ public class HotelRepository {
         return disponibile;
     }
 }
-
