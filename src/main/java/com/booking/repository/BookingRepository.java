@@ -7,7 +7,6 @@ import org.bson.Document;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.types.ObjectId;
-import com.booking.models.Camera;
 
 import java.util.ArrayList;
 import java.util.List;
