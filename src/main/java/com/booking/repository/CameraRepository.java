@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.mongodb.client.model.Filters.eq;
+
 public class CameraRepository {
     private final MongoCollection<Document> collection;
 
@@ -71,4 +73,9 @@ public class CameraRepository {
     public void deleteById(ObjectId id) {
         collection.deleteOne(new Document("_id", id));
     }
+
+    public void markAsAvailable(ObjectId id) {
+        collection.updateOne( eq("_id", id), new Document("$set", new Document("disponibila", true)));
+    }
 }
+

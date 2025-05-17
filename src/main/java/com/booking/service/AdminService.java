@@ -24,7 +24,7 @@ public class AdminService {
             return;
         }
 
-        // 🧹 Ștergem documentul complet din colecția users
+        //  Ștergem documentul complet din colecția users
         userRepository.deleteById(client.getId());
 
         System.out.println("Client șters împreună cu toate cardurile sale: " + username);
