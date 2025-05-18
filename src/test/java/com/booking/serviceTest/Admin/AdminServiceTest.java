@@ -11,6 +11,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+ Acest test verifică dacă un admin poate:
+ - crea un client nou
+ - adăuga un card pentru acel client
+ - șterge complet clientul din baza de date
+ - confirma că acel client nu mai există după ștergere
+*/
+
 public class AdminServiceTest {
 
     @Test
@@ -20,31 +28,33 @@ public class AdminServiceTest {
         UserService userService = new UserService(userRepository);
         AdminService adminService = new AdminService(userRepository);
 
-        // 1. Creează clientul
         String username = "clientDeSters";
         String email = "sterge@exemplu.com";
-        userService.register(username, "parola123", "Stergator", "Test", email, "client");
 
-        // 2. Adaugă card
+        userService.register(username, "parola123", "Stergator", "Test", email, "client");
+        System.out.println("Client înregistrat: " + username);
+
         var user = userService.login(username, "parola123");
         assertNotNull(user);
         assertTrue(user instanceof Client);
         Client client = (Client) user;
+        System.out.println("Client autentificat cu succes: " + client.getUsername());
 
         ClientService clientService = new ClientService(userRepository);
         clientService.adaugaCard(client, "4567123412341234", "999");
+        System.out.println("Card adăugat pentru client: " + client.getUsername());
 
-        // 3. Verificare existență
         long inainte = db.getCollection("users")
                 .countDocuments(new Document("username", username));
-        assertEquals(1, inainte, "Clientul trebuie să existe înainte de ștergere.");
+        assertEquals(1, inainte);
+        System.out.println("Verificare: clientul există în baza de date.");
 
-        // 4. Ștergere
         adminService.stergeClient(username);
+        System.out.println("Ștergere efectuată de admin pentru: " + username);
 
-        // 5. Verificare că nu mai există
         long dupa = db.getCollection("users")
                 .countDocuments(new Document("username", username));
-        assertEquals(0, dupa, "Clientul trebuie să fie șters complet.");
+        assertEquals(0, dupa);
+        System.out.println("Verificare finală: clientul a fost șters complet.");
     }
 }

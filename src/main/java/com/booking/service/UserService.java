@@ -6,22 +6,31 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 
+/*
+ Clasa UserService oferă funcționalități de:
+ - înregistrare a utilizatorilor (client sau manager)
+ - autentificare prin username/email și parolă
+ Include mesaje informative pentru fiecare pas important.
+*/
+
+
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 
     public void register(String username, String parola, String nume, String prenume, String email, String role) {
-        System.out.println("➡️ register() apelată");
+        System.out.println("Apel: înregistrare utilizator");
 
         if (userRepository.existsByUsernameOrEmail(username, email)) {
-            System.out.println("⚠️ EXISTĂ deja user/email");
+            System.out.println("Eroare: utilizatorul sau emailul există deja în sistem.");
             return;
         }
 
         User user = null;
+
         switch (role.toLowerCase()) {
             case "client" -> {
-                System.out.println("🔄 Creăm client...");
+                System.out.println("Creare utilizator de tip client...");
                 Client client = new Client();
                 client.setUsername(username);
                 client.setParola(parola);
@@ -34,7 +43,7 @@ public class UserService {
                 user = client;
             }
             case "manager" -> {
-                System.out.println("🔄 Creăm manager...");
+                System.out.println("Creare utilizator de tip manager...");
                 Manager manager = new Manager();
                 manager.setUsername(username);
                 manager.setParola(parola);
@@ -46,26 +55,23 @@ public class UserService {
                 user = manager;
             }
             default -> {
-                System.out.println("❌ Rol invalid: " + role);
+                System.out.println("Rol invalid specificat: " + role);
                 return;
             }
         }
 
-        System.out.println("📦 Apelăm save()...");
+        System.out.println("Salvare utilizator în baza de date...");
         userRepository.save(user);
-        System.out.println("✅ Utilizator salvat: " + username);
+        System.out.println("Utilizator înregistrat cu succes: " + username);
     }
-
-
 
     public User login(String input, String parola) {
         User user = userRepository.findByUsernameOrEmailAndPassword(input, parola);
         if (user == null) {
-            System.out.println("Autentificare eșuată: utilizator inexistent sau parolă greșită.");
+            System.out.println("Autentificare eșuată: nume de utilizator/email sau parolă incorectă.");
         } else {
-            System.out.println("Autentificare reușită! Bine ai venit, " + user.getNume() + user.getPrenume());
+            System.out.println("Autentificare reușită: " + user.getNume() + " " + user.getPrenume());
         }
         return user;
     }
-
 }
