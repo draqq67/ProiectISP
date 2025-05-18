@@ -148,4 +148,38 @@ public class UserRepository {
         collection.updateOne(new Document("_id", client.getId()), update);
     }
 
+    public boolean platesteCuCard(ObjectId clientId, String numarCard, String cvv, float suma, ObjectId destinatarId) {
+        // 1. Verificăm existența cardului valid
+        Document queryClient = new Document("_id", clientId)
+                .append("carduri", new Document("$elemMatch", new Document("numar", numarCard).append("cvv", cvv)));
+        Document docClient = collection.find(queryClient).first();
+
+        if (docClient == null) {
+            System.out.println(" Card invalid sau client inexistent.");
+            return false;
+        }
+
+        float soldCurent = ((Double) docClient.get("sold")).floatValue();
+        if (soldCurent < suma) {
+            System.out.println(" Fonduri insuficiente.");
+            return false;
+        }
+
+        // 2. Scădem suma din soldul clientului
+        collection.updateOne(new Document("_id", clientId),
+                new Document("$set", new Document("sold", soldCurent - suma)));
+
+        // 3. Adăugăm suma în soldul destinatarului (dacă e client sau manager)
+        Document docDestinatar = collection.find(new Document("_id", destinatarId)).first();
+        if (docDestinatar != null && docDestinatar.containsKey("sold")) {
+            float soldDest = ((Double) docDestinatar.get("sold")).floatValue();
+            collection.updateOne(new Document("_id", destinatarId),
+                    new Document("$set", new Document("sold", soldDest + suma)));
+        }
+
+        System.out.println(" Plata efectuată către utilizatorul cu ID: " + destinatarId);
+        return true;
+    }
 }
+
+
